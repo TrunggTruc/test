@@ -1,29 +1,26 @@
--- Tạo frame mới
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(1, 0, 1, 0)
-frame.BackgroundColor3 = Color3.new(0, 0, 0)
-frame.BorderSizePixel = 0
-frame.Parent = game:GetService("Workspace")
 
--- Thiết lập giới hạn FPS là 15
-game:GetService("RunService").RenderStepped:Connect(function()
-    game:GetService("RunService").Stepped:Wait()
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+-- Tạo frame đen
+local blackFrame = Instance.new("Frame")
+blackFrame.Size = UDim2.new(1, 0, 1, 0)
+blackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+blackFrame.BackgroundTransparency = 1
+
+-- Thiết lập giới hạn FPS
+RunService.RenderStepped:Connect(function()
+    wait(1/15) -- Giới hạn FPS thành 15
 end)
 
--- Bật/tắt tính năng với phím L
-local userInputService = game:GetService("UserInputService")
-local enabled = true
-
-userInputService.InputBegan:Connect(function(input)
+-- Bật/tắt tính năng bằng phím L
+UserInputService.InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.L then
-        enabled = not enabled
-
-        if enabled then
-            print("Tính năng đã được bật.")
+        if blackFrame.Parent then
+            blackFrame.Parent = nil -- Tắt frame đen nếu đã được kích hoạt trước đó
         else
-            print("Tính năng đã được tắt.")
-        end
-
-        -- Xử lý logic của tính năng khi bật hoặc tắt.
-    end
+            blackFrame.Parent = game.Players.LocalPlayer.PlayerGui -- Bật frame đen nếu chưa được kích hoạt trước đó 
+        end 
+    end 
 end)
+
