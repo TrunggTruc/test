@@ -1,26 +1,47 @@
 
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
--- Tạo frame đen
-local blackFrame = Instance.new("Frame")
-blackFrame.Size = UDim2.new(1, 0, 1, 0)
-blackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-blackFrame.BackgroundTransparency = 1
+local isBlackScreenEnabled = false
 
--- Thiết lập giới hạn FPS
-RunService.RenderStepped:Connect(function()
-    wait(1/15) -- Giới hạn FPS thành 15
+-- Function to enable black screen effect
+local function enableBlackScreen()
+    isBlackScreenEnabled = true
+    
+    -- Code to enable black screen effect and reduce GPU and CPU load goes here
+    
+    print("Black screen enabled")
+end
+
+-- Function to disable black screen effect
+local function disableBlackScreen()
+    isBlackScreenEnabled = false
+    
+    -- Code to disable black screen effect and restore normal GPU and CPU load goes here
+    
+    print("Black screen disabled")
+end
+
+-- Listen for key press event
+UserInputService.InputBegan:Connect(function(input, processed)
+    if input.KeyCode == Enum.KeyCode.L and not processed then
+        if isBlackScreenEnabled then
+            disableBlackScreen()
+        else
+            enableBlackScreen()
+        end
+    end
 end)
 
--- Bật/tắt tính năng bằng phím L
-UserInputService.InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.L then
-        if blackFrame.Parent then
-            blackFrame.Parent = nil -- Tắt frame đen nếu đã được kích hoạt trước đó
-        else
-            blackFrame.Parent = game.Players.LocalPlayer.PlayerGui -- Bật frame đen nếu chưa được kích hoạt trước đó 
-        end 
+-- Update loop to reduce GPU and CPU usage when the black screen is enabled
+RunService.Heartbeat:Connect(function()
+    if isBlackScreenEnabled then
+        
+        -- Code to reduce GPU and CPU usage goes here
+        
+        wait()  -- Adjust the delay as needed for your specific use case.
+                -- This helps prevent excessive resource consumption.
+        
     end 
 end)
 
